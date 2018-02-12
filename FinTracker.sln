@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTracker", "CRUD_Angular\FinTracker.csproj", "{19E52D7F-C9D5-4375-90E0-B0C80A1C86EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinTracker", "FinTracker.csproj", "{19E52D7F-C9D5-4375-90E0-B0C80A1C86EE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportGeneration", "ReportGeneration\ReportGeneration.csproj", "{956F0D44-68A4-4BC9-A620-B7F56DDE39E3}"
 EndProject

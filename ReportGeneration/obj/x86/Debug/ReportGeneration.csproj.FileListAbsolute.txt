@@ -12,3 +12,4 @@ C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGene
 C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\obj\x86\Debug\ReportGeneration.csprojResolveAssemblyReference.cache
 C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\obj\x86\Debug\ReportGeneration.exe
 C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\obj\x86\Debug\ReportGeneration.pdb
+C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\Tracking\ReportGeneration\bin\Debug\ReportGeneration.exe.config
