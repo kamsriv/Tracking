@@ -1,0 +1,66 @@
+﻿<!--All the reviewers details available in this list-->
+<div class="panel-primary col-lg-4">
+    <div class="panel-heading panel-title">
+        Create Reviewer</div>
+    <div class="panel-body">
+        <div class="form-group col-lg-12">
+            <label class="control-label col-lg-3">
+                Select User</label>
+            <div class="col-lg-9">
+                <select class="form-control input-mini" data-ng-model="ReviewAssign.ReviewerId" ng-init="ReviewAssign.ReviewerIsPrimary=1">
+                    <option ng-repeat="User in Users" value="{{User.UserId}}">{{User.UserName}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-lg-12 hide">
+            <label for="Type" class="control-label col-lg-3">
+                Reviewee</label>
+            <div class="col-lg-9">
+                <select class="form-control" data-ng-model="ReviewAssign.RevieweeId" multiple="multiple">
+                    <option ng-repeat="User in RevieweeList" value="{{User.UserId}}">{{User.UserName}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-lg-12">
+            <div class="pull-right">
+                <button class="btn btn-primary" data-ng-click="save()">
+                    <i class="glyphicon glyphicon-save"></i>&nbsp; <span>Save</span>
+                </button>
+                <button class="btn btn-warning" data-ng-click="clear()">
+                    <i class="glyphicon glyphicon-remove"></i>&nbsp; <span>Clear</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel-primary col-lg-6">
+    <div class="panel-heading panel-title">
+        <span class="badge badge-warning">{{FiltersInfo.TotalRows}}</span>Available Reviewers</div>
+    <div class="panel-body">
+<table class="table table-striped" id="WorkItems">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Reviewer</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="item in ReviewersList track by $index" ng-init="hover=true"
+            ng-mouseenter="hover = false" ng-mouseleave="hover = true">
+            <td>
+                {{($index+1)}}
+                <div ng-class="{showhide: hover}" class="hovbtnWrap">
+                    <button class="btn btn-xs btn-danger" data-ng-click="edit(item)">
+                        <i class="glyphicon glyphicon-trash" style="cursor: pointer;" title="delete"></i>&nbsp;
+                        <span>Delete</span>
+                    </button>
+                </div>
+            </td>
+            <td>
+                {{item.ReviewerName}}
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>

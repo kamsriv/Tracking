@@ -1,0 +1,126 @@
+﻿@using FinTracker.Models;
+
+<!--Select a team if there are multiple teams for the user-->
+<div class="col-lg-2">
+        <span class="h3">Team</span>
+        <div class="btn-toolbar pull-right">
+        <div class="btn-group">
+            @foreach (String t in Common.GetUser.AssignedTeam.Split('|'))
+            {
+                switch (t)
+                {
+                    case "ap": ViewBag.Name = "AP"; ViewBag.Title = "Accounts Payable";
+                        break;
+                    case "ar": ViewBag.Name = "AR"; ViewBag.Title = "Accounts Recievable";
+                        break;
+                    case "tr": ViewBag.Name = "Treasury"; ViewBag.Title = "Treasury";
+                        break;
+                    case "fp": ViewBag.Name = "FPNA"; ViewBag.Title = "FPNA";
+                        break;
+                    case "ex": ViewBag.Name = "Expense"; ViewBag.Title = "Expense Reimbursement";
+                        break;
+                }
+                <button class="btn btn-default" title="@ViewBag.Title" data-toggle="tooltip" data-placement="top" tooltip
+                        ng-class="Report.TeamName=='@t'?'btn-primary':'btn-default'" ng-click="setTeam('@t')">@ViewBag.Name</button>
+            }
+        </div>
+        </div>
+<br /><br />        
+        <div ng-class="Report.TeamName!==''?'visible':'hide'" >
+        <div class="btn-toolbar">
+        <div class="btn-group-vertical">
+           @* <button class="btn btn-default" ng-click="rptTimetaken();" ng-class="Report.rptType=='Timetaken'?'btn-primary':'btn-default'">Time taken</button>*@
+            <button class="btn btn-default" title="Generate report for selected date" data-toggle="tooltip" data-placement="right" tooltip
+                         ng-click="rptHistory();" ng-class="Report.RptType=='History'?'btn-primary':'btn-default'">Todays Report</button>
+            <button class="btn btn-default" title="Generate report for between dates" data-toggle="tooltip" data-placement="right" tooltip
+                         ng-click="rptBetweenDates();" ng-class="Report.RptType=='BetweenDts'?'btn-primary':'btn-default'">Between Dates</button>
+        </div>
+        </div>  
+        </div>
+</div>
+<!--Team selected then proceed further.  -->
+
+<div class="col-lg-10" ng-show="Report.rptType==='Timetaken'">
+       <div class="form-group col-lg-5">
+                <label class="control-label col-lg-5">User</label>
+                <div class="col-lg-7">
+                    <select class="form-control" data-ng-model="Report.UserId">
+                        <option ng-repeat="User in UsersList" value="{{User.UserId}}">{{User.UserName}}</option>
+                    </select>
+                </div>
+        </div>
+       <div class="form-group col-lg-5">
+                <label class="control-label col-lg-5">Type</label>
+                <div class="col-lg-7">
+                    <select class="form-control" data-ng-model="Report.UserType">
+                        <option value="Processor">Processor</option>
+                        <option value="Reviewer">Reviewer</option>
+                    </select>
+                </div>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" data-loading-text="Loading.." ng-click="generateTimetaken()">
+                <i class="glyphicon glyphicon-ok"></i>&nbsp;
+                <span>Generate</span>
+            </button>
+        </div>
+</div>
+
+<div class="col-lg-10" ng-show="Report.RptType === 'BetweenDts'">
+       <div class="form-group col-lg-4">
+                <label class="control-label col-lg-4">Start Date</label>
+                <div class="col-lg-8">
+                     <!--for ap team they are working in different time zones from 6PM till 3AM so giving option for am/pm also-->
+                     <input type="datetime-local" ng-show="Report.TeamName==='ap'" class="form-control input-sm" data-ng-model="Report.RptDate"/>
+                     <input type="date" ng-show="Report.TeamName!=='ap'" class="form-control input-sm" data-ng-model="Report.RptDate"/>
+                </div>
+        </div>
+        <div class="form-group col-lg-4">
+                <label class="control-label col-lg-4">End Date</label>
+                <div class="col-lg-8">
+                     <input type="datetime-local" ng-show="Report.TeamName==='ap'" class="form-control input-sm" data-ng-model="Report.EndDate"/>
+                     <input type="date" ng-show="Report.TeamName!=='ap'" class="form-control input-sm" data-ng-model="Report.EndDate"/>
+                </div>
+        </div>
+
+</div>
+
+<div class="col-lg-8" ng-show="Report.RptType ==='History'">
+       <div class="form-group col-lg-5">
+                <label class="control-label col-lg-4">Date</label>
+                <div class="col-lg-8">
+                <!--for ap team they are working in different time zones from 6PM till 3AM so giving option for am/pm also-->
+                     <input type="datetime-local" ng-show="Report.TeamName==='ap'" class="form-control input-sm" data-ng-model="Report.RptDate"/>
+                     <input type="date" ng-show="Report.TeamName!=='ap'" class="form-control input-sm" data-ng-model="Report.RptDate"/>
+                </div>
+        </div>
+</div>
+        <div class="col-lg-8" ng-show="Report.RptType !==''">
+            <div class="form-group col-lg-5">
+                    <button class="btn btn-primary btn-sm pull-right" ng-click="validateDates().length === 0 && generate();" id="btnGenerate" title="Generate Report" data-toggle="tooltip" data-placement="top">
+                        <i ng-class="Report.IsGenerating?'glyphicon glyphicon-globe': 'glyphicon glyphicon-play' " id="iconplay"></i>&nbsp;
+                        <span id="spanplay">{{Report.IsGenerating?'Generating':'Generate'}}</span>
+                    </button>
+                </div>
+        </div>
+
+<div class="alertWrapper" ng-show="errorMessages.length>0" >
+<div role="alert" class="alert alert-danger alert-dismissable" id="errmsgs">
+    <ul>
+        <li ng-repeat="err in errorMessages">{{err}}</li>
+    </ul>
+</div>
+</div>
+@*
+<ul class="nav nav-tabs">
+<li><a href="#" data-toggle="tab">Home</a></li>
+<li><a href="#" data-toggle="tab">Profile</a></li>
+<li><a href="#" data-toggle="tab">Messages</a></li>
+<li><a href="#" data-toggle="tab">Settings</a></li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane active" id="home">...</div>
+<div class="tab-pane" id="profile">...</div>
+<div class="tab-pane" id="messages">...</div>
+<div class="tab-pane" id="settings">...</div>
+</div>*@

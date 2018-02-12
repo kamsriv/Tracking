@@ -1,0 +1,59 @@
+---------------------------------------------
+Accessed Date: 6/14/2017 2:42:53 PM 
+ Email Has been generated for the day
+---------------------------------------------
+Accessed Date: 6/14/2017 2:48:30 PM 
+ Email Has been generated for the day
+---------------------------------------------
+Accessed Date: 6/16/2017 3:47:43 PM 
+ Email Has been generated for the day
+---------------------------------------------
+Accessed Date: 7/6/2017 10:13:15 PM 
+ Email Has been generated for the day
+---------------------------------------------
+Error Description: Accessed Date: 7/6/2017 10:16:20 PM 
+ System.ArgumentException: Sheet index (3) is out of range (0..1)
+   at NPOI.XSSF.UserModel.XSSFWorkbook.ValidateSheetIndex(Int32 index)
+   at NPOI.XSSF.UserModel.XSSFWorkbook.RemoveSheetAt(Int32 index)
+   at FinTracker.Utilities.XLExport.GenerateExcel(String Path)
+   at ReportGeneration.Program.Main(String[] args) in C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\Program.cs:line 29
+---------------------------------------------
+Error Description: Accessed Date: 7/6/2017 10:20:12 PM 
+ System.ArgumentException: Sheet index (3) is out of range (0..1)
+   at NPOI.XSSF.UserModel.XSSFWorkbook.ValidateSheetIndex(Int32 index)
+   at NPOI.XSSF.UserModel.XSSFWorkbook.RemoveSheetAt(Int32 index)
+   at FinTracker.Utilities.XLExport.GenerateExcel(String Path)
+   at ReportGeneration.Program.Main(String[] args) in C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\Program.cs:line 29
+---------------------------------------------
+Error Description: Accessed Date: 10/13/2017 2:07:00 PM 
+ System.Net.Mail.SmtpException: Failure sending mail. ---> System.Net.WebException: The remote name could not be resolved: 'ryanmail.ryanco.com'
+   at System.Net.ServicePoint.GetConnection(PooledStream PooledStream, Object owner, Boolean async, IPAddress& address, Socket& abortSocket, Socket& abortSocket6)
+   at System.Net.PooledStream.Activate(Object owningObject, Boolean async, GeneralAsyncDelegate asyncCallback)
+   at System.Net.PooledStream.Activate(Object owningObject, GeneralAsyncDelegate asyncCallback)
+   at System.Net.ConnectionPool.GetConnection(Object owningObject, GeneralAsyncDelegate asyncCallback, Int32 creationTimeout)
+   at System.Net.Mail.SmtpConnection.GetConnection(ServicePoint servicePoint)
+   at System.Net.Mail.SmtpTransport.GetConnection(ServicePoint servicePoint)
+   at System.Net.Mail.SmtpClient.GetConnection()
+   at System.Net.Mail.SmtpClient.Send(MailMessage message)
+   --- End of inner exception stack trace ---
+   at System.Net.Mail.SmtpClient.Send(MailMessage message)
+   at ReportGeneration.Program.SendEmail(String filename) in C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\Program.cs:line 69
+   at ReportGeneration.Program.Main(String[] args) in C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\Program.cs:line 31
+---------------------------------------------
+Error Description: Accessed Date: 10/15/2017 6:50:28 PM 
+ System.Net.Mail.SmtpException: Failure sending mail. ---> System.Net.WebException: The remote name could not be resolved: 'ryanmail.ryanco.com'
+   at System.Net.ServicePoint.GetConnection(PooledStream PooledStream, Object owner, Boolean async, IPAddress& address, Socket& abortSocket, Socket& abortSocket6)
+   at System.Net.PooledStream.Activate(Object owningObject, Boolean async, GeneralAsyncDelegate asyncCallback)
+   at System.Net.PooledStream.Activate(Object owningObject, GeneralAsyncDelegate asyncCallback)
+   at System.Net.ConnectionPool.GetConnection(Object owningObject, GeneralAsyncDelegate asyncCallback, Int32 creationTimeout)
+   at System.Net.Mail.SmtpConnection.GetConnection(ServicePoint servicePoint)
+   at System.Net.Mail.SmtpTransport.GetConnection(ServicePoint servicePoint)
+   at System.Net.Mail.SmtpClient.GetConnection()
+   at System.Net.Mail.SmtpClient.Send(MailMessage message)
+   --- End of inner exception stack trace ---
+   at System.Net.Mail.SmtpClient.Send(MailMessage message)
+   at ReportGeneration.Program.SendEmail(String filename) in C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\Program.cs:line 69
+   at ReportGeneration.Program.Main(String[] args) in C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\Program.cs:line 31
+---------------------------------------------
+Accessed Date: 2/11/2018 7:05:59 PM 
+ Email Has been generated for the day

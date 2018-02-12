@@ -1,0 +1,200 @@
+﻿
+
+
+<!--I am not sure, if the reviewer click on review button if the history is created 
+then he need to complete the current task and then only move to the other task for review.-->
+<div class="panel-primary col-lg-10">
+    <div class="panel-heading panel-title">
+        <span class="badge badge-warning">{{RowCount}}</span> Item(s) waiting for Review</div>
+    <div class="panel-body">
+            <!--the below things will be available only for the Reviewer while reviewing the items-->
+            <nav ng-if="myTableSettings.getTotalPages() > 1">
+            <ul class="pagination">
+                <!--First Page-->
+                <li ng-click="myTableSettings.setPage(1)"><a href="javascript:void(0)"><span aria-hidden="true">
+                    &laquo;</span> </a></li>
+                <li ng-repeat="page in myTableSettings.getTotalPagesArray() track by $index" ng-class="{disabled:$index+1 == myTableSettings.getPage()}"
+                    ng-click="myTableSettings.setPage($index+1)"><a href="javascript:void(0)" ng-class="{active:$index+1 == myTableSettings.getPage() }">
+                        <span aria-hidden="true">{{$index+1}}</span> </a></li>
+                <!--Last Page-->
+                <li ng-click="myTableSettings.setPage(myTableSettings.getTotalPages())"><a href="javascript:void(0)">
+                    <span aria-hidden="true">&raquo;</span> </a></li>
+                <li>&nbsp;</li>
+            </ul>
+            <ul class="pagination pull-right">
+                <li>Page Size: 
+                    <select id="displayPerPage" ng-model="itemsPerPage" ng-init="itemsPerPage = 100" ng-change="myTableSettings.setRows(itemsPerPage)" ng-options="item for item in selectOptions"></select>
+                </li>
+            </ul>
+          </nav>
+
+            <table class="table table-striped" simple-table="myTableSettings" id="WorkItems">
+                <thead>
+                    <tr>
+                        <th>#
+                            <div>&nbsp;</div>
+                        </th>
+                        <th>Processor<br />
+                            <input type="text" id="sname" ng-model="nameSearch" ng-change="myTableSettings.search(nameSearch,'UserId')" >
+                        </th>
+                        <th>Activity<br />
+                            <input type="text" id="activity" ng-model="activitySearch" ng-change="myTableSettings.search(activitySearch,'ActivityName')" >
+                        </th>
+                        <th>Invoice # <br />
+                            <input type="text" id="invoice" ng-model="invoiceSearch" style="width:50px" ng-change="myTableSettings.search(invoiceSearch,'InvoiceNumber')" >
+                        </th>
+                        <th>Request # <br />
+                            <input type="text" id="request" ng-model="requestSearch" style="width:50px" ng-change="myTableSettings.search(requestSearch,'RequestNumber')" >
+                        </th>
+                        <th>Comments
+                            <div>&nbsp;</div>
+                        </th>
+                        <th>Created On <br />
+                            <div>&nbsp;</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="item in myTableSettings.getFilteredData() track by $index" ng-init="hover=true" ng-mouseenter="hover = false"
+                        ng-mouseleave="hover = true">
+                        <td>{{ ((myTableSettings.getPage()-1) * myTableSettings.getRows()) +  ($index+1)}}</td>
+                        <td>
+                            {{item.UserId}}
+                            <div ng-class="{showhide: hover}" style="padding-left:40px;margin-top:-20px;position:absolute;">
+                                <button class="btn btn-xs btn-success" data-ng-click="edit(item)" data-target="#myModel">
+                                    <i class="glyphicon glyphicon-ok" style="cursor: pointer;" title="Review"></i>&nbsp;
+                                    <span>Review</span>
+                                </button>
+                            </div>
+                        </td>
+                        <td>{{item.ActivityName}}</td>
+                        <td>
+                            {{item.InvoiceNumber}}
+                        </td>
+                        <td>
+                            {{item.RequestNumber}}
+                        </td>
+                        <td>
+                            <div class="setellipse">
+                                {{item.Comments}}</div>
+                        </td>
+                        <td>
+                            {{item.StartedDate |jsDate| date:'MM/dd/yyyy HH:mm'}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        <nav ng-if="myTableSettings.getTotalPages() > 1">
+            <ul class="pagination">
+                <!--First Page-->
+                <li ng-click="myTableSettings.setPage(1)"><a href="javascript:void(0)"><span aria-hidden="true">
+                    &laquo;</span> </a></li>
+                <li ng-repeat="page in myTableSettings.getTotalPagesArray() track by $index" ng-class="{disabled:$index+1 == myTableSettings.getPage()}"
+                    ng-click="myTableSettings.setPage($index+1)"><a href="javascript:void(0)" ng-class="{active:$index+1 == myTableSettings.getPage() }">
+                        <span aria-hidden="true">{{$index+1}}</span> </a></li>
+                <!--Last Page-->
+                <li ng-click="myTableSettings.setPage(myTableSettings.getTotalPages())"><a href="javascript:void(0)">
+                    <span aria-hidden="true">&raquo;</span> </a></li>
+                <li>&nbsp;</li>
+            </ul>
+            <ul class="pagination pull-right">
+                <li>Page Size: 
+                    <select id="displayPerPage" ng-model="itemsPerPage" ng-init="itemsPerPage = 100" ng-change="myTableSettings.setRows(itemsPerPage)" ng-options="item for item in selectOptions"></select>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<a href="" data-toggle="modal" data-target="#myModal" id="myModalShower"></a>
+<div id="myModal" class="modal fade col-lg-5" role="dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            @*<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;</button>*@
+            <h4 class="modal-title">
+                Review &nbsp;<span class="h6 text-primary">Entry Created By <i>{{WMReview.UserId}}</i>
+                    on <i>{{WMReview.StartedDate |jsDate|date:'MM/dd/yyyy HH:mm'}}</i></span>
+            </h4>
+        </div>
+        <div class="modal-body">
+            <fieldset>
+                <div>
+                    <!--which were entered by the user-->
+                    <div class="form-group col-lg-12">
+                        <label class="control-label col-lg-5" for="Activity">
+                            Activity</label>
+                        <span class="text-primary col-lg-7">{{WMReview.ActivityName}}</span>
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <label class="control-label col-lg-5">
+                            Invoice Number</label>
+                        <span class="text-primary col-lg-7">{{WMReview.InvoiceNumber}}</span>
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <label class="control-label col-lg-5">
+                            Request Number</label>
+                        <span class="text-primary col-lg-7">{{WMReview.RequestNumber}}</span>
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <label class="control-label col-lg-5">
+                            Comments</label>
+                        <span class="text-primary col-lg-7">{{WMReview.Comments}}</span>
+                    </div>
+                </div>
+                <div>
+                    <!--which need to be entered by reviewer-->
+                    <div class="form-group col-lg-12">
+                        <label class="control-label col-lg-5">
+                            Is Error Found</label>
+                        <div class="col-lg-7">
+                            <select id="cmb_err" class="form-control" data-ng-model="WMReview.ErrFound">
+                                <option value="false">No</option>
+                                <option value="true">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <label class="control-label col-lg-5">
+                            Reviewer Comments</label>
+                        <div class="col-lg-7">
+                            <textarea class="form-control" cols="10" rows="5" data-ng-model="WMReview.ReviewerComments"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            @*<div class="form-group col-lg-12">
+                            <div class="pull-right">
+                                <button class="btn btn-primary" data-ng-click="update()"> <!--validate_update().length === 0 &&-->
+                                    <i class="glyphicon glyphicon-edit"></i>&nbsp; <span>Update</span>
+                                </button>
+                                <button class="btn btn-warning" data-ng-click="clear()" data-ng-hide="WMReview.Status=='Created'">
+                                    <i class="glyphicon glyphicon-remove"></i>&nbsp; <span>Clear</span>
+                                </button>
+                            </div>
+                        </div>*@
+
+                <div class="alertWrapper" ng-show="errorMessages.length>0" >
+                <div role="alert" class="alert alert-danger alert-dismissable" id="errmsgs">
+                    <ul>
+                        <li ng-repeat="err in errorMessages">{{err}}</li>
+                    </ul>
+                </div>
+                </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-danger" data-ng-click="validate_update().length === 0 && update('Rework')">
+                <i class="glyphicon glyphicon-repeat"></i>&nbsp; <span>Rework</span>
+            </button>
+            <button class="btn btn-warning" data-ng-click="validate_update().length === 0 && update('Corrected Errors')">
+                <i class="glyphicon glyphicon-floppy-disk"></i>&nbsp; <span>Corrected Errors</span>
+            </button>
+            <button class="btn btn-success" data-ng-click="validate_update().length === 0 && update('Approved')">
+                <i class="glyphicon glyphicon-ok"></i>&nbsp; <span>No Errors</span>
+            </button>
+        </div>
+    </div>
+    <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->

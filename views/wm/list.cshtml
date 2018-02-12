@@ -1,0 +1,364 @@
+﻿@using FinTracker.Models;
+<div class="alertWrapper" ng-show="errorMessages.length>0 && WMRedo.StartedDate.length === 0 ">
+    <div role="alert" class="alert alert-danger alert-dismissable" id="errmsgs">
+        <ul>
+            <li ng-repeat="err in errorMessages">{{err}}</li>
+        </ul>
+    </div>
+</div>
+@*@if (Common.GetUser.IsReviewer)
+{
+    <div data-ng-init="redirectToReviewer()">He is a reviewer</div>
+}
+else
+{*@
+<div class="panel-primary col-lg-5" data-ng-init="load('@Common.GetUser.UserId','@Common.GetUser.AssignedTeam');">
+    <div class="panel-heading panel-title">
+        Log Entry <span class="pull-right h6" ng-show="WorkMaint.Status=='Created'">Created
+            On {{WorkMaint.StartedDate |jsDate|date:'MM/dd/yyyy HH:mm'}}</span>
+    </div>
+    <div class="panel-body">
+        <div class="form-group col-lg-12">
+            <label class="control-label col-lg-4" for="Activity">
+                Activity</label>
+            <div class="col-lg-6">
+                <select class="form-control" data-ng-model="WorkMaint.ActivityId" ng-disabled="WorkMaint.Status=='Created'">
+                    @*<option ng-repeat="ac in [{id:1,activity:'BonusPayments'},{id:2,activity:'Nothing'},{id:3,activity:'SomeOther'}]" value="{{ac.id}}">{{ac.activity}}</option>    *@
+                    <option data-ng-selected="{{WorkMaint.ActivityId==ac.activityid}}" ng-repeat="ac in WorkMaint.ActivityList"
+                        value="{{ac.activityid}}">{{ac.description}}</option>
+                </select>
+            </div>
+            <button class="btn" ng-class="LockActivity?'btn-primary':'btn-default'" ng-click="toggleLock()">
+                <i class="glyphicon glyphicon-star"></i>
+            </button>
+        </div>
+        <div class="form-group col-lg-12">
+            <label for="Type" class="control-label col-lg-4">
+                Invoice Number</label>
+            <div class="col-lg-6">
+                <input type="text" class="form-control" ng-disabled="WorkMaint.Status=='Created'"
+                    data-ng-model="WorkMaint.InvoiceNumber" maxlength="50" placeholder="Enter invoice number" />
+            </div>
+        </div>
+        <div class="form-group col-lg-12">
+            <label for="Type" class="control-label col-lg-4">
+                Request Number</label>
+            <div class="col-lg-6">
+                <input type="text" class="form-control" ng-disabled="WorkMaint.Status=='Created'"
+                    data-ng-model="WorkMaint.RequestNumber" maxlength="50" placeholder="Enter request number" />
+            </div>
+        </div>
+        <div class="form-group col-lg-12" ng-show="WorkMaint.Status=='Created'">
+            <label for="Comments" class="control-label col-lg-4">
+                Comments</label>
+            <div class="col-lg-6">
+                <textarea class="form-control" rows="5" data-ng-model="WorkMaint.Comments"></textarea>
+            </div>
+        </div>
+        <div class="form-group col-lg-10">
+            <div class="pull-right">
+                <button class="btn btn-success" data-ng-click="update()" ng-show="WorkMaint.Status=='Created'">
+                    <i class="glyphicon glyphicon-ok"></i>&nbsp; <span>Submit</span>
+                    <!--validate_update().length === 0 &&-->
+                </button>
+                <button class="btn btn-primary" data-ng-click="isFormValid() && save()" ng-hide="WorkMaint.Status=='Created'">
+                    <i class="glyphicon glyphicon-log-in"></i>&nbsp; <span>Create</span>
+                </button>
+                <button class="btn btn-warning" data-ng-click="clear()" ng-hide="WorkMaint.Status=='Created'">
+                    <i class="glyphicon glyphicon-remove"></i>&nbsp; <span>Clear</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@*}*@
+<div class="panel-primary col-lg-7">
+    <div class="panel-heading panel-title">
+        Items Need to re work</div>
+    <div class="panel-body">
+        <!--the below things will be available only for the Reviewer while reviewing the items-->
+        <table class="table table-striped" id="WorkItems" for_datatbl='true'>
+            <thead>
+                <tr>
+                    <th>
+                        Invoice Number
+                    </th>
+                    <th>
+                        Request Number
+                    </th>
+                    <th>
+                        Comments
+                    </th>
+                    <th>
+                        Created On
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="item in WorkMaintList_rework" ng-init="hover=true" ng-mouseenter="hover = false"
+                    ng-mouseleave="hover = true">
+                    <td>
+                        {{item.InvoiceNumber}}
+                        <div ng-class="{showhide: hover}" style="padding-left: 40px; margin-top: -20px; position: absolute;">
+                            <button class="btn btn-xs btn-success" data-ng-click="rework(item)" data-target="#myModel">
+                                <i class="glyphicon glyphicon-ok" style="cursor: pointer;" title="Start Over"></i>
+                                &nbsp; <span>Start Over</span>
+                            </button>
+                        </div>
+                    </td>
+                    <td>
+                        {{item.RequestNumber}}
+                    </td>
+                    <td>
+                        {{item.ReviewerComments}}
+                    </td>
+                    <td>
+                        {{item.StartedDate |jsDate| date:'MM/dd/yyyy HH:mm'}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--for showing the burndown charting-->
+<div class="col-lg-10">
+    @*<button id="btnChart" class="btn btn-primary" onclick="location.href='#/ch'">
+    <i class="glyphicon glyphicon-road"></i>
+</button>*@
+    <input type="text" data-ng-model="ProcData" id="hdnProcessor" style="display: none" />
+    <input type="text" data-ng-model="ProcActData" id="hdnProcessorAct" style="display: none" />
+    <input type="text" data-ng-model="Activities" id="hdnActivities" style="display: none" />
+    <input type="text" data-ng-model="RevData" id="hdnRev" style="display: none" />
+    <input type="text" data-ng-model="RevActData" id="hdnRevAct" style="display: none" />
+    <input type="text" data-ng-model="RevActivities" id="hdnRevActivities" style="display: none" />
+
+    <div id="processorContainer" class="shorten" ng-show="ProcData !== ''">
+        <div class="charttitle">
+            Processing <span class="popout" onclick="excolProcChart(this)" id="spn_proc"><i class="glyphicon glyphicon-remove"></i></span></div>
+        <div class="col-lg-6">
+            <div id="chart_div_p">
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div id="chart_div_pAct">
+            </div>
+        </div>
+    </div>
+    <div id="reviewerContainer"  class="shorten" ng-show="RevData !== ''">
+        <div class="charttitle">
+            Review <span class="popout" onclick="excolRevChart(this)" id="spn_rev"><i class="glyphicon glyphicon-remove"></i></span></div>
+        <div class="col-lg-6">
+            <div id="chart_div_r">
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div id="chart_div_rAct">
+            </div>
+        </div>
+    </div>
+</div>
+<!--Recent requirement by kalyani team to edit the data directly after creation.-->
+<div class="panel-primary col-lg-12" style="display: none;">
+    <div class="panel-heading panel-title">
+        Items to be Submitted</div>
+    <div class="panel-body">
+        <!--This page is only for view purpose so not giving any edit functionality.
+ Thinking to give only items which were created a week before.
+ The below things will be available for the Processor/Reviewer -->
+        <table class="table table-striped" id="WorkItems_Created">
+            <thead>
+                <tr>
+                    <th>
+                        Activity
+                    </th>
+                    <th>
+                        Invoice #
+                    </th>
+                    <th>
+                        Request #
+                    </th>
+                    <th>
+                        Created On
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="item in WorkMaintList_create" ng-init="hover=true" ng-mouseenter="hover = false"
+                    ng-mouseleave="hover = true">
+                    <td>
+                        {{item.ActivityName}}
+                        <div ng-class="{showhide: hover}" style="padding-left: 100px; margin-top: -20px;
+                            position: absolute;">
+                            <div class="form-group col-lg-12">
+                                <button class="form-control btn btn-xs btn-success" data-ng-click="update(item)"
+                                    data-target="#myModel">
+                                    <i class="glyphicon glyphicon-ok" style="cursor: pointer;" title="Submit"></i>&nbsp;
+                                    <span>Submit</span>
+                                </button>
+                                <textarea class="form-control" cols="5" rows="2" data-ng-model="item.Comments"></textarea>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        {{item.InvoiceNumber == ''? 'N/A': item.InvoiceNumber}}
+                    </td>
+                    <td>
+                        {{item.RequestNumber == ''? 'N/A': item.RequestNumber}}
+                    </td>
+                    <td>
+                        {{item.StartedDate |jsDate| date:'MM/dd/yyyy HH:mm'}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--If the user is working on the rework items this part will be enabled-->
+<a href="" data-toggle="modal" data-target="#myModal" id="myModalShower"></a>
+<div id="myModal" class="modal fade col-lg-5" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-content">
+        <div class="modal-header">
+            @* Not giving this button to close the modal because it is being auditing <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;</button>*@
+            <h4 class="modal-title">
+                Redo Entry&nbsp;<span class="h6 text-primary">Created on <i>{{WMRedo.StartedDate |jsDate|date:'MM/dd/yyyy
+                    HH:mm'}}</i></span>
+            </h4>
+        </div>
+        <div class="modal-body">
+            <fieldset>
+                <legend class="hide">Entries entered by User</legend>
+                <!--which need to be entered by reviewer-->
+                <div class="col-lg-12">
+                    <div class="text-danger">
+                        <b>Reviewed By <i>{{WMRedo.ReviewerName}}</i></b>
+                        <p>
+                            Comments - {{WMRedo.ReviewerComments}}</p>
+                    </div>
+                </div>
+                <div class="panel-primary col-lg-12" data-ng-init="hover=true">
+                    <div class="panel-heading panel-title" ng-class="{showhide:!hover}">
+                        Re working <span class="pull-right"><i class="glyphicon glyphicon-pencil" data-ng-click="hover=!hover">
+                        </i></span>
+                    </div>
+                    <div class="panel-body" ng-class="{showhide: !hover}">
+                        <!--which were entered by the user-->
+                        <div class="form-group col-lg-12">
+                            <label class="control-label col-lg-5" for="Activity">
+                                Activity</label>
+                            <span class="text-primary col-lg-7">{{WMRedo.ActivityName}}</span>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label class="control-label col-lg-5">
+                                Invoice Number</label>
+                            <span class="text-primary col-lg-7">{{WMRedo.InvoiceNumber}}</span>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label class="control-label col-lg-5">
+                                Request Number</label>
+                            <span class="text-primary col-lg-7">{{WMRedo.RequestNumber}}</span>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label class="control-label col-lg-5">
+                                Comments</label>
+                            <div class="col-lg-7">
+                                <textarea class="form-control" rows="4" data-ng-model="WMRedo.Comments"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-heading panel-title" ng-class="{showhide:hover}">
+                        Re working <span class="pull-right"><i class="glyphicon glyphicon-remove-circle"
+                            data-ng-click="hover=!hover"></i></span>
+                    </div>
+                    <div class="panel-body" ng-class="{showhide: hover}">
+                        <div class="form-group col-lg-12">
+                            <label class="control-label col-lg-4" for="Activity">
+                                Activity</label>
+                            <div class="col-lg-8">
+                                <select class="form-control" data-ng-model="WMRedo.ActivityId">
+                                    @*<option ng-repeat="ac in [{id:1,activity:'BonusPayments'},{id:2,activity:'Nothing'},{id:3,activity:'SomeOther'}]" value="{{ac.id}}">{{ac.activity}}</option>    *@
+                                    <option data-ng-selected="{{WMRedo.ActivityId==ac.activityid}}" ng-repeat="ac in WorkMaint.ActivityList"
+                                        value="{{ac.activityid}}">{{ac.description}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label class="control-label col-lg-4">
+                                Invoice Number</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" data-ng-model="WMRedo.InvoiceNumber" maxlength="50"
+                                    placeholder="Enter invoice number" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label class="control-label col-lg-4">
+                                Request Number</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" data-ng-model="WMRedo.RequestNumber" maxlength="50"
+                                    placeholder="Enter request number" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label class="control-label col-lg-4">
+                                Comments</label>
+                            <div class="col-lg-8">
+                                <textarea class="form-control" rows="4" data-ng-model="WMRedo.Comments"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            @*<div class="form-group col-lg-12">
+                            <div class="pull-right">
+                                <button class="btn btn-primary" data-ng-click="update()"> <!--validate_update().length === 0 &&-->
+                                    <i class="glyphicon glyphicon-edit"></i>&nbsp; <span>Update</span>
+                                </button>
+                                <button class="btn btn-warning" data-ng-click="clear()" data-ng-hide="WMReview.Status=='Created'">
+                                    <i class="glyphicon glyphicon-remove"></i>&nbsp; <span>Clear</span>
+                                </button>
+                            </div>
+                        </div>*@
+            <div class="alertWrapper" ng-show="errorMessages.length>0">
+                <div role="alert" class="alert alert-danger alert-dismissable" id="errmsgs">
+                    <ul>
+                        <li ng-repeat="err in errorMessages">{{err}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" data-ng-click="validate_resubmit().length===0 && reSubmit('ReSubmitted')">
+                <i class="glyphicon glyphicon-ok"></i>&nbsp; <span>Submit</span>
+            </button>
+        </div>
+    </div>
+    <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+<!--user chart showing dialog-->
+<div id="dv_chartbtnp" class="rsidebtn rside-proc" ng-click="showChart('proc')">
+    <div>Processor</div>
+</div>
+<div id="dv_chartbtnr" class="rsidebtn rside-rev" ng-click="showChart('rev')">
+    <div>Reviewer&nbsp;&nbsp;</div>
+</div>
+@*<div id="myChart" class="modal fade col-lg-12" role="dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">
+                Daily utilization graph
+            </h4>
+        </div>
+        <div class="modal-body">
+            <bars-chart  ></bars-chart><!--chart-data="myData"
+             https://stackoverflow.com/questions/25607455/d3js-angularjs-use-d3js-in-angular-directives
+             http://odiseo.net/angularjs/proper-use-of-d3-js-with-angular-directives-->
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" data-ng-click="validate_resubmit().length===0 && reSubmit('ReSubmitted')">
+                <i class="glyphicon glyphicon-ok"></i>&nbsp; <span>Submit</span>
+            </button>
+        </div>
+    </div>
+    <!-- /.modal-content -->
+</div>*@

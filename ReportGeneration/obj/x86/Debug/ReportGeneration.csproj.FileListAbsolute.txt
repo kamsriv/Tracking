@@ -1,0 +1,14 @@
+C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\bin\Debug\ReportGeneration.exe.config
+C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\bin\Debug\ReportGeneration.exe
+C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\bin\Debug\FinTracker.dll
+C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\bin\Debug\ICSharpCode.SharpZipLib.dll
+C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\bin\Debug\NPOI.dll
+C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\bin\Debug\NPOI.OOXML.dll
+C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\bin\Debug\NPOI.OpenXml4Net.dll
+C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\bin\Debug\NPOI.OpenXmlFormats.dll
+C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\bin\Debug\NPOI.xml
+C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\bin\Debug\NPOI.OOXML.xml
+C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\bin\Debug\NPOI.OpenXml4Net.xml
+C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\obj\x86\Debug\ReportGeneration.csprojResolveAssemblyReference.cache
+C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\obj\x86\Debug\ReportGeneration.exe
+C:\WorkRelated\ThomsonFolder\Programming\FinanceTeamProj\CRUD_Angular\ReportGeneration\obj\x86\Debug\ReportGeneration.pdb

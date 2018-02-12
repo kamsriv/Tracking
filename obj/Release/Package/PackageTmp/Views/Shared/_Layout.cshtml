@@ -1,0 +1,66 @@
+﻿@using FinTracker.Models;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/Scripts")
+    @Scripts.Render("~/bundles/bootstrap")
+   @* @Scripts.Render("~/bundles/datatables")*@
+    @Scripts.Render("~/bundles/common")
+ <link rel="shortcut icon" href="~/favicon.ico" />
+ <link rel="Bookmark" href="~/favicon.ico" />
+</head>
+@{
+    String strPath = "#/";
+ FinTracker.Models.User objUser = Common.GetUser;
+ //if(objUser.IsReviewer)  {strPath =  "#/rv"; }//If the user is a reviewer then the home is looking for different URL
+ }
+<body ng-app="MyApp">
+    <div class="navbar navbar-default">
+        <div class="navbar-inner">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="@strPath"><img src="~/Content/images/logo.png" alt="Ryan"/></a><div class="h3 text-primary"></div>
+                <button aria-expanded="false" class="navbar-toggle collapsed" type="button" data-toggle="collapse"
+                    data-target="#collapsepanel">
+                    <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span
+                        class="icon-bar"></span><span class="icon-bar"></span>
+                </button>
+            </div>
+            <!--for mobile devices this will be toggled like a dropdown.-->
+            <div style="height: 275px;" aria-expanded="false" id="collapsepanel" class="navbar-collapse collapse">
+                <div class="h3 text-primary col-lg-4"><a style="text-decoration:none" href="@strPath">Finance Team Tracker</a></div>
+                <ul class="nav navbar-nav">
+                @if (objUser.IsAdmin)
+                {
+                    <li><a href="#/u">User</a></li>
+                    <li><a href="#/r">Reviewer</a></li>
+                    <li><a href="#/rp">Reports</a></li>
+                }
+                @*For AP team shobha need to have access*@
+                    @if (objUser.UserId.Equals("RC05576"))
+                    {
+                            <li><a href="#/rp">Reports</a></li>
+                    }
+                    <li><a href="#/e">Entries</a></li>
+                @if (objUser.AssignedTeam.Contains("ar"))
+                {
+                     <li><a href="#/rv">Review</a></li>
+                }
+                </ul>
+                <div id="errMsgs" style="display:none;padding-top:15px;">
+                <div class="badge badge-success col-lg-5" ng-show="Message.split('|')[0] === 'true'" style="width:30%;">{{Message.split('|')[1]}}</div><!--for displaying the messages as a common place ng-show="Message.length>0"-->
+                <div class="badge badge-danger col-lg-5" ng-show="Message.split('|')[0] === 'false'" style="width:30%;">{{Message.split('|')[1]}}</div>
+                </div>
+                <p class="navbar-text pull-right">
+                   <span class="text-primary"> Hello, @objUser.UserName</span>&nbsp;<sup class="badge badge-warning" style="cursor:pointer" id="bdgReworkCnt">{{RowCount}}</sup></p>
+            </div>
+        </div>
+    </div>
+    @RenderBody()
+    @RenderSection("scripts", required: false)
+</body>
+</html>

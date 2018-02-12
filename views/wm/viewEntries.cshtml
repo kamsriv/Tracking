@@ -1,0 +1,32 @@
+﻿<div class="panel-primary col-lg-12">
+<div class="panel-heading panel-title">Items created  by Me</div>
+<div class="panel-body">
+<div>
+<!--This page is only for view purpose so not giving any edit functionality.
+ Thinking to give only items which were created a week before.
+ The below things will be available for the Processor/Reviewer -->
+<table class="table table-striped" id="WorkItems" data-ng-init="loadAllData()">
+    <thead>
+        <tr><th>Activity</th>
+            <th>Invoice #</th>
+            <th>Request #</th>
+            <th>Comments</th>
+            <th>Created On</th>
+            <th>Item Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="item in WorkMaintList">
+            <td>{{item.ActivityName}}</td>
+            <td>{{item.InvoiceNumber == ''? 'N/A': item.InvoiceNumber}}</td>
+            <td>{{item.RequestNumber == ''? 'N/A': item.RequestNumber}}</td>
+            <td><div class="setellipse">{{item.Comments == '' ? 'N/A': item.Comments}}</div></td>
+            <td>{{item.StartedDate |jsDate| date:'MM/dd/yyyy HH:mm'}}</td>
+            <td>{{item.Status}}</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+</div>
+
+</div>

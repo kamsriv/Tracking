@@ -1,0 +1,106 @@
+﻿<!--All the user details available in this list-->
+<div class="panel-primary col-lg-4">
+    <div class="panel-heading panel-title">
+      <label ng-show="IsEdit">Update User</label> 
+       <label ng-show="!IsEdit">Create User</label>
+      </div>
+    <div class="panel-body">
+        <form name="userform" novalidate> <!--novalidate placed then we can write our own custom messages-->
+        <div class="form-group col-lg-12">
+            <label class="control-label col-lg-3">
+                RC#</label>
+            <div class="col-lg-9">
+                <input type="text" class="form-control" data-ng-model="User.UserId" ng-disabled="IsEdit" required placeholder="Enter RC Number" />
+            </div>
+        </div>
+        <div class="form-group col-lg-12">
+            <label for="Type" class="control-label col-lg-3">
+                Name</label>
+            <div class="col-lg-9">
+                <input type="text" class="form-control" data-ng-model="User.UserName" placeholder="Enter Name" required placeholder="Enter Name" />
+            </div>
+        </div>
+        <div class="form-group col-lg-12">
+            <label for="Comments" class="control-label col-lg-3">
+                Email ID</label>
+            <div class="col-lg-9">
+                <input type="text" class="form-control" rows="5" data-ng-model="User.EmailId" placeholder="Enter Email Id" required placeholder="Enter Email Id" />
+            </div>
+        </div>
+        <!--When the form is in edit mode then open for Active/In Active-->
+        <div class="form-group col-lg-12" ng-show="IsEdit">
+            <label for="Is Active" class="control-label col-lg-3">
+                Is Active</label>
+            <div class="col-lg-9">
+                <input type="checkbox" data-ng-model="User.IsActive" />
+            </div>
+        </div>
+        <div class="form-group col-lg-12">
+            <div class="pull-right">
+                <button class="btn btn-primary" ng-hide="IsEdit" data-ng-click="validate_save().length === 0 && save()">
+                    <i class="glyphicon glyphicon-save"></i>&nbsp; <span>Save</span>
+                </button>
+                <button class="btn btn-primary" ng-show="IsEdit" data-ng-click="validate_update().length === 0 && update()">
+                    <i class="glyphicon glyphicon-edit"></i>&nbsp; <span>Update</span>
+                </button>
+                <button class="btn btn-warning" data-ng-click="clear()">
+                    <i class="glyphicon glyphicon-remove"></i>&nbsp; <span>Clear</span>
+                </button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+<div class="panel-primary col-lg-8">
+    <div class="panel-heading panel-title"><label>Available Users</label></div>
+    <div class="panel-body">
+        <div >
+            <table class="table table-striped" id="WorkItems">
+                <thead>
+                    <tr><th>RC#</th>
+                        <th>Name</th>
+                        <th>Email Id</th>
+                        <th>Active</th>
+                        <th>Created By</th>
+                        <th>Created On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="item in UserList" ng-init="hover=true"  ng-mouseenter="hover=false" ng-mouseleave="hover=true">
+                        <td><div ng-class="{showhide: hover}" style="position:absolute;padding-left:60px;" >
+                            <a href='#' onclick="event.preventDefault();"><i class="glyphicon glyphicon-edit btn btn-xs btn-primary" data-ng-click="edit(item);" tooltip data-original-title="Edit"></i></a>&nbsp;
+                            <a href='#' onclick="event.preventDefault();"><i class="glyphicon glyphicon-trash btn btn-xs btn-danger" data-ng-click="Delete(item);" tooltip data-original-title="Delete"></i></a>
+                        </div>
+                         {{item.UserId}}</td>
+                        <td>{{item.UserName}}</td>
+                        <td>{{item.EmailId}}</td>
+                        <td>{{item.IsActive}}</td>
+                        <td>{{item.CreatedBy}}</td>
+                        <td>{{item.CreatedDate | jsDate | date:'MM/dd/yyyy HH:mm'}}</td>
+                    </tr>
+                    <tr id="emptyrow" ng-show="UserList.length === 0">
+                        <td colspan="8">No data available to display</td>
+                    </tr>
+                </tbody>
+            </table>
+            @*http://stackoverflow.com/questions/22435212/angular-js-format-date-from-json-object
+myApp.filter("jsDate", function () {
+    return function (x) {
+        return new Date(parseInt(x.substr(6)));
+    };
+});
+
+This makes it possible to write
+
+{{ $scope.item.CreatedOn | jsDate | date:"yyyy-MM-dd" }}*@
+        </div>
+    </div>
+</div>
+
+<div>
+    {{Message}}</div>
+<div ng-show="errorMessages.length > 0">
+    <ul data-ng-repeat="item in errorMessages">
+        <li>{{item}}</li>
+    </ul>
+</div>
